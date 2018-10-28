@@ -5,7 +5,7 @@ using UnityEngine;
 public class ParticleDecalPool : MonoBehaviour
 {
 
-    public int maxDecals = 100;
+    public long maxDecals = 100;
     public float decalSizeMin = .5f;
     public float decalSizeMax = 1.5f;
 
@@ -19,7 +19,7 @@ public class ParticleDecalPool : MonoBehaviour
         decalParticleSystem = GetComponent<ParticleSystem>();
         particles = new ParticleSystem.Particle[maxDecals];
         particleData = new ParticleDecalData[maxDecals];
-        for (int i = 0; i < maxDecals; i++)
+        for (long i = 0; i < maxDecals; i++)
         {
             particleData[i] = new ParticleDecalData();
         }
@@ -50,7 +50,7 @@ public class ParticleDecalPool : MonoBehaviour
 
     void DisplayParticles()
     {
-        for (int i = 0; i < particleData.Length; i++)
+        for (long i = 0; i < particleData.Length; i++)
         {
             particles[i].position = particleData[i].position;
             particles[i].rotation3D = particleData[i].rotation;

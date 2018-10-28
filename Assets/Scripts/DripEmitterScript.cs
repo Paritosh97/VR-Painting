@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EmitterScript : MonoBehaviour
+public class DripEmitterScript : MonoBehaviour
 {
     public ParticleSystem particleEmitter;
     public ParticleSystem splatterParticles;
-    public Gradient particColorGradient;
+
+    public ParticleDecalPool splatDecalPool;
+
+    public Gradient particleColorGradient;
+    
+    public bool debug;
 
     List<ParticleCollisionEvent> collisionEvents;
-
-    public bool debug;
 
     // Use this for initialization
     void Start()
@@ -19,11 +22,12 @@ public class EmitterScript : MonoBehaviour
     }
 
     private void OnParticleCollision(GameObject other)
-    {
+    {        
         ParticlePhysicsExtensions.GetCollisionEvents(particleEmitter, other, collisionEvents);
 
         for(int i = 0; i < collisionEvents.Count; i++)
         {
+            splatDecalPool.ParticleHit(collisionEvents[i], particleColorGradient);
             EmitAtLocation(collisionEvents[i]);
         }
     }
@@ -33,7 +37,8 @@ public class EmitterScript : MonoBehaviour
         splatterParticles.transform.position = particleCollisionEvent.intersection;
         splatterParticles.transform.rotation = Quaternion.LookRotation(particleCollisionEvent.normal);
         ParticleSystem.MainModule psMain = splatterParticles.main;
-        psMain.startColor = particColorGradient.Evaluate(Random.Range(0f, 1f));
+        psMain.startColor = particleColorGradient.Evaluate(Random.Range(0f, 1f));
+
         splatterParticles.Emit(1);
     }
 
@@ -43,7 +48,7 @@ public class EmitterScript : MonoBehaviour
         if(OVRInput.Get(OVRInput.Button.PrimaryIndexTrigger) || debug)
         {
             ParticleSystem.MainModule psMain = particleEmitter.main;
-            psMain.startColor = particColorGradient.Evaluate(Random.Range(0f, 1f));
+            psMain.startColor = particleColorGradient.Evaluate(Random.Range(0f, 1f));
             particleEmitter.Emit(1);
         }
     }
